@@ -81,8 +81,8 @@ ul, ol, dl { margin: 0; padding: 0; list-style: none; }
 #trace { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
 .hero-inner { position: relative; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 40px; }
 .portrait {
-  width: clamp(200px, 26vw, 320px); aspect-ratio: 4 / 5; object-fit: cover; flex-shrink: 0;
-  border-radius: 16px; border: 1px solid var(--line); box-shadow: 0 12px 32px rgba(31, 21, 55, 0.15);
+  width: clamp(200px, 26vw, 320px); height: clamp(200px, 26vw, 320px); aspect-ratio: 1 / 1; object-fit: cover; flex-shrink: 0;
+  border-radius: 50%; border: 1px solid var(--line); box-shadow: 0 12px 32px rgba(31, 21, 55, 0.15);
 }
 .hero h1 {
   font-size: clamp(3rem, 10vw, 7rem);
@@ -158,6 +158,21 @@ a.card:hover { transform: translateY(-3px); border-color: var(--accent); box-sha
 .card .tags { margin-top: 4px; }
 .card-cta { margin-top: auto; padding-top: 8px; font-family: var(--display); font-weight: 600; color: var(--accent-ink); }
 
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+.chip {
+  font-family: var(--display); font-weight: 600; font-size: 0.9rem; cursor: pointer;
+  padding: 6px 14px; border: 1.5px solid var(--line); border-radius: 999px;
+  background: var(--surface); color: var(--muted);
+}
+.chip:hover { border-color: var(--accent); color: var(--accent-ink); }
+.chip.is-on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.card[hidden] { display: none; }
+.card .meta { margin: 0; font-family: var(--display); font-size: 0.9rem; font-weight: 600; color: var(--accent-ink); }
+
+.news { border-top: 1px solid var(--line); max-width: 760px; }
+.news li { display: grid; grid-template-columns: 96px 1fr; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.news .when { font-family: var(--display); font-weight: 600; color: var(--accent-ink); }
+
 .other { border-top: 1px solid var(--line); }
 .other li {
   display: grid; grid-template-columns: 1fr auto; gap: 8px 32px; align-items: start;
@@ -212,10 +227,11 @@ a.card:hover { transform: translateY(-3px); border-color: var(--accent); box-sha
 @media (max-width: 820px) {
   .split, .project, .cols { grid-template-columns: 1fr; }
   .hero-inner { flex-direction: column-reverse; align-items: flex-start; }
-  .portrait { width: 180px; }
+  .portrait { width: 180px; height: 180px; }
   .project.lead { margin-left: -16px; margin-right: -16px; padding-left: 16px; padding-right: 16px; }
   .skills div, .facts div { grid-template-columns: 1fr; gap: 2px; }
   .other li { grid-template-columns: 1fr; }
+  .news li { grid-template-columns: 1fr; gap: 2px; }
   .topbar { padding: 12px 16px; }
   .topbar nav { gap: 14px; }
   .wrap { padding: 0 16px; }

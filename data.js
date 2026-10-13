@@ -1,12 +1,10 @@
-/* =====================================================================
-   ===================================================================== */
 
 const GH = "https://github.com/Rah00m";
 
 const SITE = {
   name: "Rahma Fathy",
-  title: "Biomedical Engineering Student and AI & Medical Imaging Researcher",
-  lede: "I build AI for medical data, from reading medical images to physics-guided models and practical clinical tools.",
+  title: "Biomedical AI: Research and Applications",
+  lede: "I build AI for healthcare, from research ideas to apps people can actually use.",
   photo: "photo.jpg",
   school: "Systems & Biomedical Engineering, Cairo University",
   location: "Cairo, Egypt",
@@ -14,21 +12,38 @@ const SITE = {
   linkedin: "https://linkedin.com/in/rahmafathy105",
   github: GH,
   about: [
-    "I'm a biomedical engineer and AI researcher focused on medical image analysis, physics-guided deep learning, and cognitive AI. I've built healthcare projects that won awards, contributed to open-source software, and designed adaptive reading assistants for people with learning disabilities.",
-    "I'm looking to pursue a Master's degree in AI to deepen my research background and build practical clinical AI tools."
+    "Salam , I'm Rahma,a senior Systems & Biomedical Engineering student at Cairo University (class of 2027), and I love using AI to make sense of medical data: images, signals, and physics-based models of the body.",
+    "I like working on both sides of a project: the research (new ideas, careful experiments) and the application (building something people can actually open and use). My graduation project, Read with Me, is supervised by Dr. Aliaa Rehan Youssef, and that's where I work on the research and application side.",
+    "Outside of class I teach ML/AI at NetPoint, contribute to open source , and keep learning through courses and internships.",
+    "I'm aiming for a Master's degree in AI, so if you're working on something interesting in medical AI, I'd love to chat."
   ],
+  interests: ["Computer vision" ,"Medical Imaging", "Physics-Informed ML", "Cognitive AI", "Clinical AI Tools"],
   facts: [
     ["Education", "B.Sc. in Systems and Biomedical Engineering, Cairo University (Oct 2022 to Jul 2027, expected)"],
     ["GPA", "3.7 / 4.00"],
     ["Languages", "Arabic, English (IELTS in preparation)"],
-    ["Currently", "Building Read with Me, my graduation project, and teaching ML/AI at NetPoint"]
+    // ["Currently", "Building Read with Me, my graduation project, and teaching ML/AI at NetPoint"]
   ]
 };
+
+const NEWS = [
+  { when: "2026.10", text: "Started Master AI Agents & LLMs with Digital Hub (D-Hub) and Orange Digital Center." },
+  { when: "2026.08", text: "Took OmniGenics' AI in Healthcare course: ML, deep learning, bioinformatics and medical AI." },
+  { when: "2026.07", text: "Started teaching ML/AI at NetPoint." },
+  { when: "2025.09", text: "Took NVIDIA Academy's AI for All: From Basics to GenAI Practice." },
+  { when: "2025.08", text: "Biomedical Engineering Applications of Laser (90 h) at NILES." },
+  { when: "2025.07", text: "Clinical Engineering (90 h) at Egyptian Railways Medical Center, and started the AI and Omics Research internship." }
+];
+
+const FILTERS = ["Medical Imaging", "Deep Learning", "Machine Learning", "Physics-Informed ML", "Cognitive AI", "Open Source"];
 
 const FEATURED = [
   {
     title: "Read with Me: Adaptive Reading Assistant",
     status: "In progress, graduation project",
+    supervisor: "Supervised by Dr. Aliaa Rehan Youssef",
+    role: "My part: research and application",
+    cats: ["Cognitive AI", "Deep Learning","Computer vision"],
     summary: "A closed-loop, gaze-driven AI engine for people with learning disorders. It turns real-time eye-movement parameters into adaptive reading interventions.",
     points: [
       "Designed a 5-layer pipeline: hardware gaze capture, oculomotor event extraction (fixations, saccades, regressions), diagnostic ML classification, an adaptive AI controller, and an interactive reading interface.",
@@ -40,6 +55,7 @@ const FEATURED = [
   },
   {
     title: "AI-Powered Retinal Oxygen Transport Modeling (PINN)",
+    cats: ["Physics-Informed ML", "Deep Learning"],
     summary: "A physics-informed neural network for steady-state oxygen transport in the retina.",
     points: [
       "Designed a forward PINN in TensorFlow with four sub-networks, one per tissue layer.",
@@ -52,7 +68,9 @@ const FEATURED = [
   {
     title: "AI-Based Pulmonary Gas Exchange & Disease Diagnosis",
     award: "2nd place, Cairo University Research Day",
-    summary: "Chest X-ray diagnosis combined with a lung gas diffusion model, supervised by Dr. Ahmed Abdelsamea.",
+    supervisor: "Supervised by Dr. Ahmed Abdelsamea",
+    cats: ["Medical Imaging", "Computer vision" , "Deep Learning"],
+    summary: "Chest X-ray diagnosis combined with a lung gas diffusion model",
     points: [
       "Fine-tuned DenseNet121 (TensorFlow) on NIH ChestX-ray14 for multi-label classification of 14 thoracic diseases, with a probability threshold to flag normal cases.",
       "Built a desktop app that shows the top-three predicted probabilities and tracks each patient's disease progression across follow-up X-rays.",
@@ -63,6 +81,7 @@ const FEATURED = [
   },
   {
     title: "Multimodal Skin Lesion Classification",
+    cats: ["Medical Imaging","Computer vision" , "Machine Learning"],
     summary: "An interpretable benign vs malignant classifier that fuses handcrafted dermoscopic features with patient metadata.",
     points: [
       "Segmented lesions with GrabCut and extracted color, texture, and ABCD shape features.",
@@ -74,6 +93,7 @@ const FEATURED = [
   },
   // {
   //   title: "Dental Panoramic X-ray Detection (YOLOv8)",
+  //   cats: ["Medical Imaging", "Deep Learning"],
   //   summary: "A detector built on a public dataset after fixing the data leakage inside it.",
   //   points: [
   //     "Audited a public panoramic (OPG) dataset and found cross-split duplicates and near-duplicates using perceptual hashing.",
@@ -81,11 +101,12 @@ const FEATURED = [
   //     "Converted polygons to boxes, removed 4,210 outlier boxes, reduced 31 classes to four, added 382 background X-rays, and trained a YOLOv8 detector."
   //   ],
   //   tags: ["YOLOv8", "Dataset auditing", "Perceptual hashing"],
-  //   links: [] 
+  //   links: []
   // },
   {
     title: "OpenVINO: CPU Layer Fusion Control",
     status: "Open-source contribution",
+    cats: ["Open Source"],
     summary: "An upstream pull request to OpenVINO that makes per-layer profiling possible on CPU.",
     points: [
       "Analyzed OpenVINO's CPU execution graph to find how layer fusion hid per-layer metrics for operations such as ReLU and HardSwish.",
@@ -101,16 +122,15 @@ const FEATURED = [
   }
 ];
 
-const OTHER = [
-  { title: "SmartSignalAI: DSP & AI Diagnostics Platform", text: "Multi-signal ECG/acoustic/RF viewer, unsupervised ECG anomaly detector, pretrained 12-lead CNN, STFT Doppler estimation, SAR target detection.", links: [{ label: "GitHub", url: "https://github.com/Rah00m/SmartSignalAI" }] },
-  { title: "Signal Equalizer: DSP Audio Processing & AI Source Separation", text: "Custom Cooley-Tukey FFT/IFFT from scratch for band filtering, with Demucs v3 and Asteroid source separation compared against FFT filtering.", links: [{ label: "GitHub", url: "https://github.com/ZEY0D/Signal-Equalizer" }] },
-  { title: "RequestSense_AI: Bilingual Complaint Classification", text: "Proof-of-concept Arabic/English classifier (fine-tuned XLM-RoBERTa) trained on a 443-sample synthetic dataset that mixes separate Arabic and English datasets.", links: [{ label: "GitHub", url: "https://github.com/Rah00m/RequestSense_AI" }] },
-  { title: "Collaborative Dual-Elevator System over SPI IPC", text: "Two-elevator controller on two STM32 MCUs with a framed SPI protocol, task allocation, and fault fallback to independent mode.", links: [{ label: "GitHub", url: "https://github.com/Rah00m/collaborative-dual-elevator-system-over-spi-ipc" }] },
-  { title: "Auto-Cooler: Closed-Loop Temperature Control", text: "STM32F4 fan controller with DMA-driven ADC, PWM, a Mealy state machine, and a custom 4-bit LCD1602 driver.", links: [] },
-  { title: "Virtual Search-and-Rescue Operations: 3D Simulation in Blender", text: "Emergency-response environment with character and vehicle animation, textured scenes, lighting, and audio.", links: [{ label: "Video", url: "https://drive.google.com/file/d/1IEFNmwu3gp3t3PEuhn2TzGpG8PLpG080/view?usp=sharing" }] }
-];
+// const OTHER = [
+//   { title: "SmartSignalAI: DSP & AI Diagnostics Platform", text: "Multi-signal ECG/acoustic/RF viewer, unsupervised ECG anomaly detector, pretrained 12-lead CNN, STFT Doppler estimation, SAR target detection.", links: [{ label: "GitHub", url: "https://github.com/Rah00m/SmartSignalAI" }] },
+//   { title: "Signal Equalizer: DSP Audio Processing & AI Source Separation", text: "Custom Cooley-Tukey FFT/IFFT from scratch for band filtering, with Demucs v3 and Asteroid source separation compared against FFT filtering.", links: [{ label: "GitHub", url: "https://github.com/ZEY0D/Signal-Equalizer" }] },
+//   { title: "RequestSense_AI: Bilingual Complaint Classification", text: "Proof-of-concept Arabic/English classifier (fine-tuned XLM-RoBERTa) trained on a 443-sample synthetic dataset that mixes separate Arabic and English datasets.", links: [{ label: "GitHub", url: "https://github.com/Rah00m/RequestSense_AI" }] },
+//   { title: "Collaborative Dual-Elevator System over SPI IPC", text: "Two-elevator controller on two STM32 MCUs with a framed SPI protocol, task allocation, and fault fallback to independent mode.", links: [{ label: "GitHub", url: "https://github.com/Rah00m/collaborative-dual-elevator-system-over-spi-ipc" }] },
+//   { title: "Auto-Cooler: Closed-Loop Temperature Control", text: "STM32F4 fan controller with DMA-driven ADC, PWM, a Mealy state machine, and a custom 4-bit LCD1602 driver.", links: [] },
+//   { title: "Virtual Search-and-Rescue Operations: 3D Simulation in Blender", text: "Emergency-response environment with character and vehicle animation, textured scenes, lighting, and audio.", links: [{ label: "Video", url: "https://drive.google.com/file/d/1IEFNmwu3gp3t3PEuhn2TzGpG8PLpG080/view?usp=sharing" }] }
+// ];
 
-/* الأحدث فوق */
 const TRAINING = [
   { when: "Oct 2026 to now", title: "Master AI Agents & LLMs", org: "Digital Hub (D-Hub) & Orange Digital Center" },
   { when: "Aug to Sep 2026", title: "AI in Healthcare: ML, Deep Learning, Bioinformatics & Medical AI", org: "OmniGenics", links: [{ label: "Certificate", url: "https://drive.google.com/file/d/1Dx7fQ8WMvZfiit13dCBFv4cOJL3EhiuB/view?usp=sharing" }] },
@@ -134,15 +154,13 @@ const AWARDS = [
   "Coach Academy: Level 3 in Competitive Programming Problem Solving"
 ];
 
-const SKILLS = [
-  ["Programming", "Python, C/C++, Java, JavaScript"],
-  ["Machine learning", "TensorFlow, Keras, PyTorch, Hugging Face Transformers, scikit-learn, XGBoost, OpenCV, NumPy, Pandas"],
-  ["Signals & systems", "FFT/STFT, ECG processing, STM32 embedded development, Blender"],
-  ["Tools & frameworks", "Git, GitHub, React.js, Node.js, Spring Boot"]
-];
+// const SKILLS = [
+//   ["Programming", "Python, C/C++, Java, JavaScript"],
+//   ["Machine learning", "TensorFlow, Keras, PyTorch, Hugging Face Transformers, scikit-learn, XGBoost, OpenCV, NumPy, Pandas"],
+//   ["Signals & systems", "FFT/STFT, ECG processing, STM32 embedded development, Blender"],
+//   ["Tools & frameworks", "Git, GitHub, React.js, Node.js, Spring Boot"]
+// ];
 
-/* =====================================================================
-   ===================================================================== */
 const POSTS = [
 
 ];
