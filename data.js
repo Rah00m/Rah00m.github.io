@@ -11,11 +11,11 @@ const SITE = {
   email: "rahmafathy630@gmail.com",
   linkedin: "https://linkedin.com/in/rahmafathy105",
   github: GH,
-  about: [
-    "Salam , I'm Rahma,a senior Systems & Biomedical Engineering student at Cairo University (class of 2027), and I love using AI to make sense of medical data: images, signals, and physics-based models of the body.",
-    "I like working on both sides of a project: the research (new ideas, careful experiments) and the application (building something people can actually open and use). My graduation project, Read with Me, is supervised by Dr. Aliaa Rehan Youssef, and that's where I work on the research and application side.",
-    "Outside of class I teach ML/AI at NetPoint, contribute to open source , and keep learning through courses and internships.",
-    "I'm aiming for a Master's degree in AI, so if you're working on something interesting in medical AI, I'd love to chat."
+about: [
+    "Salam, I'm Rahma, a senior Systems & Biomedical Engineering student at Cairo University (class of 2027), and I love using AI to make sense of medical data—images, signals, and physics-based models of the body—while exploring Computer Vision applications across diverse fields.",
+    "I like working on both sides of a project: the research (new ideas, careful experiments) and the application (building something people can actually open and use). My graduation project, Read with Me, is supervised by Dr. Aliaa Rehan Youssef, combining computer vision and cognitive AI to support learning disorders.",
+    "Outside of class I teach ML/AI at NetPoint, contribute to open source, and keep learning through courses and internships.",
+    "I'm aiming for a Master's degree in AI, so if you're working on something interesting in medical AI or computer vision, I'd love to chat."
   ],
   interests: ["Computer vision" ,"Medical Imaging", "Physics-Informed ML", "Cognitive AI", "Clinical AI Tools"],
   facts: [
