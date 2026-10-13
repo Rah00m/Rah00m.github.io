@@ -72,17 +72,17 @@ const FEATURED = [
     tags: ["XGBoost", "HAM10000", "OpenCV", "Interpretable ML"],
     links: [{ label: "GitHub", url: "https://github.com/Rah00m/Multimodal-skinLesion-classification" }]
   },
-  {
-    title: "Dental Panoramic X-ray Detection (YOLOv8)",
-    summary: "A detector built on a public dataset after fixing the data leakage inside it.",
-    points: [
-      "Audited a public panoramic (OPG) dataset and found cross-split duplicates and near-duplicates using perceptual hashing.",
-      "Rebuilt 70/15/15 splits (9,332 / 1,985 / 1,986 images) by similarity group. MD5 verification found zero cross-split leakage.",
-      "Converted polygons to boxes, removed 4,210 outlier boxes, reduced 31 classes to four, added 382 background X-rays, and trained a YOLOv8 detector."
-    ],
-    tags: ["YOLOv8", "Dataset auditing", "Perceptual hashing"],
-    links: [] 
-  },
+  // {
+  //   title: "Dental Panoramic X-ray Detection (YOLOv8)",
+  //   summary: "A detector built on a public dataset after fixing the data leakage inside it.",
+  //   points: [
+  //     "Audited a public panoramic (OPG) dataset and found cross-split duplicates and near-duplicates using perceptual hashing.",
+  //     "Rebuilt 70/15/15 splits (9,332 / 1,985 / 1,986 images) by similarity group. MD5 verification found zero cross-split leakage.",
+  //     "Converted polygons to boxes, removed 4,210 outlier boxes, reduced 31 classes to four, added 382 background X-rays, and trained a YOLOv8 detector."
+  //   ],
+  //   tags: ["YOLOv8", "Dataset auditing", "Perceptual hashing"],
+  //   links: [] 
+  // },
   {
     title: "OpenVINO: CPU Layer Fusion Control",
     status: "Open-source contribution",

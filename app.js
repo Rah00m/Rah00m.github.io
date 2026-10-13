@@ -71,20 +71,6 @@
             : `<div class="card">${inner}</div>`;
         }).join("")}
         </div>
-
-        <h3 class="subhead">More engineering and AI projects</h3>
-        <ul class="other">
-          ${OTHER.map(
-            (o) => `
-            <li>
-              <div>
-                <h4>${esc(o.title)}</h4>
-                <p>${esc(o.text)}</p>
-              </div>
-              ${links(o.links)}
-            </li>`
-          ).join("")}
-        </ul>
       </div>
     </section>
 
@@ -119,10 +105,7 @@
             <ul class="plain">${AWARDS.map((a) => `<li>${esc(a)}</li>`).join("")}</ul>
           </div>
         </div>
-        <h3 class="subhead">Skills</h3>
-        <dl class="skills">
-          ${SKILLS.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("")}
-        </dl>
+
       </div>
     </section>
 
@@ -130,7 +113,7 @@
       <div class="wrap split">
         <h2>Contact</h2>
         <div>
-          <p class="prose">I'm open to research collaborations and Master's opportunities in AI. The best way to reach me is email.</p>
+          <p class="prose">Let’s connect, share ideas, and explore exciting research and collaboration opportunities.</p>
           <ul class="links big">
             <li><a href="mailto:${esc(s.email)}">${esc(s.email)}</a></li>
             <li><a href="${esc(s.linkedin)}" target="_blank" rel="noopener">LinkedIn</a></li>
@@ -202,123 +185,133 @@
   window.addEventListener("hashchange", route);
   route();
 
-  /* ---------- Hero: a gaze scanpath ----------
-     Fixations (circles) joined by saccades (lines), like an eye-tracking
-     scanpath. It plays once over the headline, then follows the cursor. */
+  /* ---------- Hero: a living neural network ----------
+     Drifting neurons connect to nearby ones. Neurons fire at random and the
+     signal hops to connected neighbours; the cursor acts as a neuron too. */
   function initTrace() {
     const hero = document.querySelector(".hero");
     const canvas = document.getElementById("trace");
     if (!hero || !canvas) return null;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return null;
 
     const ctx = canvas.getContext("2d");
     const css = getComputedStyle(document.documentElement);
-    const color = css.getPropertyValue("--accent").trim() || "#0b7285";
-    const LIFE = 3200;
-    let pts = [];
-    let raf = 0;
-    let lastAdd = 0;
-    let timers = [];
-    let userMoved = false;
+    const color = css.getPropertyValue("--accent").trim() || "#7c3aed";
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const LINK = 150;
+    const MOUSE_LINK = 190;
+    let w = 0, h = 0, nodes = [], raf = 0, running = false;
+    const mouse = { x: 0, y: 0, on: false };
 
     function resize() {
       const dpr = window.devicePixelRatio || 1;
       const r = hero.getBoundingClientRect();
-      canvas.width = r.width * dpr;
-      canvas.height = r.height * dpr;
-      canvas.style.width = r.width + "px";
-      canvas.style.height = r.height + "px";
+      w = r.width; h = r.height;
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      canvas.style.width = w + "px";
+      canvas.style.height = h + "px";
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const count = Math.min(90, Math.max(28, Math.round((w * h) / 11000)));
+      nodes = Array.from({ length: count }, () => ({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 0.35,
+        vy: (Math.random() - 0.5) * 0.35,
+        r: 1.8 + Math.random() * 2.4,
+        fire: 0,
+        cool: 0
+      }));
+      if (reduce) frame();
     }
-    resize();
-    window.addEventListener("resize", resize);
 
-    function add(x, y) {
-      const now = performance.now();
-      pts.push({ x, y, t: now, r: 7 + Math.random() * 11 });
-      if (pts.length > 40) pts.shift();
-      lastAdd = now;
-      if (!raf) raf = requestAnimationFrame(draw);
-    }
-
-    function draw(now) {
-      raf = 0;
-      const w = canvas.width / (window.devicePixelRatio || 1);
-      const h = canvas.height / (window.devicePixelRatio || 1);
+    function frame() {
       ctx.clearRect(0, 0, w, h);
-      pts = pts.filter((p) => now - p.t < LIFE);
-      for (let i = 0; i < pts.length; i++) {
-        const p = pts[i];
-        const a = 1 - (now - p.t) / LIFE;
-        if (i > 0) {
-          const q = pts[i - 1];
-          ctx.strokeStyle = color;
-          ctx.globalAlpha = a * 0.45;
-          ctx.lineWidth = 1.5;
-          ctx.beginPath();
-          ctx.moveTo(q.x, q.y);
-          ctx.lineTo(p.x, p.y);
-          ctx.stroke();
+      ctx.fillStyle = color;
+      ctx.strokeStyle = color;
+
+      for (const n of nodes) {
+        if (!reduce) {
+          n.x += n.vx; n.y += n.vy;
+          if (n.x < 0 || n.x > w) n.vx *= -1;
+          if (n.y < 0 || n.y > h) n.vy *= -1;
+          if (mouse.on) {
+            const dx = mouse.x - n.x, dy = mouse.y - n.y, d = Math.hypot(dx, dy);
+            if (d < MOUSE_LINK && d > 1) { n.x += (dx / d) * 0.25; n.y += (dy / d) * 0.25; }
+          }
+          n.fire = Math.max(0, n.fire - 0.018);
+          n.cool = Math.max(0, n.cool - 1);
+          if (n.cool === 0 && Math.random() < 0.0007) { n.fire = 1; n.cool = 120; }
         }
-        ctx.globalAlpha = a * 0.22;
-        ctx.fillStyle = color;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.globalAlpha = a * 0.7;
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
+      }
+
+      for (let i = 0; i < nodes.length; i++) {
+        const a = nodes[i];
+        for (let j = i + 1; j < nodes.length; j++) {
+          const b = nodes[j];
+          const d = Math.hypot(a.x - b.x, a.y - b.y);
+          if (d > LINK) continue;
+          const glow = Math.max(a.fire, b.fire);
+          if (!reduce) {
+            if (a.fire > 0.9 && b.cool === 0 && Math.random() < 0.05) { b.fire = 1; b.cool = 120; }
+            if (b.fire > 0.9 && a.cool === 0 && Math.random() < 0.05) { a.fire = 1; a.cool = 120; }
+          }
+          ctx.globalAlpha = (1 - d / LINK) * (0.28 + glow * 0.6);
+          ctx.lineWidth = 1 + glow * 1.2;
+          ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+        }
+        if (mouse.on) {
+          const d = Math.hypot(a.x - mouse.x, a.y - mouse.y);
+          if (d < MOUSE_LINK) {
+            if (!reduce && Math.random() < 0.02 && a.cool === 0) { a.fire = 1; a.cool = 120; }
+            ctx.globalAlpha = (1 - d / MOUSE_LINK) * 0.6;
+            ctx.lineWidth = 1.2;
+            ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(mouse.x, mouse.y); ctx.stroke();
+          }
+        }
+      }
+
+      for (const n of nodes) {
+        if (n.fire > 0) {
+          ctx.globalAlpha = n.fire * 0.25;
+          ctx.beginPath(); ctx.arc(n.x, n.y, n.r + 4 + n.fire * 12, 0, Math.PI * 2); ctx.fill();
+        }
+        ctx.globalAlpha = 0.45 + n.fire * 0.55;
+        ctx.beginPath(); ctx.arc(n.x, n.y, n.r + n.fire * 1.5, 0, Math.PI * 2); ctx.fill();
+      }
+      if (mouse.on) {
+        ctx.globalAlpha = 0.9;
+        ctx.beginPath(); ctx.arc(mouse.x, mouse.y, 4, 0, Math.PI * 2); ctx.fill();
       }
       ctx.globalAlpha = 1;
-      if (pts.length) raf = requestAnimationFrame(draw);
+      if (running && !reduce) raf = requestAnimationFrame(frame);
     }
 
     function onMove(e) {
-      userMoved = true;
-      timers.forEach(clearTimeout);
-      timers = [];
       const r = canvas.getBoundingClientRect();
-      const x = e.clientX - r.left;
-      const y = e.clientY - r.top;
-      const last = pts[pts.length - 1];
-      const far = !last || Math.hypot(x - last.x, y - last.y) > 70;
-      if (far && performance.now() - lastAdd > 120) add(x, y);
+      mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top; mouse.on = true;
     }
-    hero.addEventListener("pointermove", onMove);
+    function onLeave() { mouse.on = false; }
 
-    // Autoplay: read the headline and the first lines of the intro, with a regression.
-    function autoplay() {
-      const cr = canvas.getBoundingClientRect();
-      const t = document.getElementById("hero-title").getBoundingClientRect();
-      const l = document.getElementById("hero-lede").getBoundingClientRect();
-      const lines = [
-        { y: t.top + t.height / 2, x0: t.left, x1: Math.min(t.right, t.left + 520) },
-        { y: l.top + l.height * 0.2, x0: l.left, x1: l.right },
-        { y: l.top + l.height * 0.55, x0: l.left, x1: l.right },
-        { y: l.top + l.height * 0.88, x0: l.left, x1: l.left + (l.right - l.left) * 0.6 }
-      ];
-      const path = [];
-      lines.forEach((ln) => {
-        const steps = 6;
-        for (let i = 0; i <= steps; i++) {
-          const x = ln.x0 + ((ln.x1 - ln.x0) * i) / steps + (Math.random() - 0.5) * 24;
-          path.push([x - cr.left, ln.y - cr.top + (Math.random() - 0.5) * 14]);
-          if (i === 4 && Math.random() > 0.4) {
-            const bx = ln.x0 + ((ln.x1 - ln.x0) * 2.6) / steps;
-            path.push([bx - cr.left, ln.y - cr.top + 6]);
-          }
-        }
+    resize();
+    window.addEventListener("resize", resize);
+    hero.addEventListener("pointermove", onMove);
+    hero.addEventListener("pointerleave", onLeave);
+
+    let io = null;
+    if (!reduce) {
+      io = new IntersectionObserver(([en]) => {
+        if (en.isIntersecting && !running) { running = true; raf = requestAnimationFrame(frame); }
+        else if (!en.isIntersecting) { running = false; cancelAnimationFrame(raf); }
       });
-      path.forEach(([x, y], i) => {
-        timers.push(setTimeout(() => { if (!userMoved) add(x, y); }, 700 + i * 190));
-      });
+      io.observe(hero);
     }
-    timers.push(setTimeout(autoplay, 100));
 
     return function stop() {
-      timers.forEach(clearTimeout);
+      running = false;
       cancelAnimationFrame(raf);
+      if (io) io.disconnect();
       hero.removeEventListener("pointermove", onMove);
+      hero.removeEventListener("pointerleave", onLeave);
       window.removeEventListener("resize", resize);
     };
   }
