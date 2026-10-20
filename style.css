@@ -74,11 +74,10 @@ ul, ol, dl { margin: 0; padding: 0; list-style: none; }
     var(--bg);
   background-blend-mode: normal;
 }
-.hero::after { /* soften the ruled lines so text stays readable */
+.hero::after {
   content: ""; position: absolute; inset: 0; pointer-events: none;
   background: linear-gradient(90deg, var(--bg) 0%, rgba(246,243,251,0.82) 55%, rgba(246,243,251,0.3) 100%);
 }
-#trace { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
 .hero-inner { position: relative; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 40px; }
 .portrait {
   width: clamp(200px, 26vw, 320px); height: clamp(200px, 26vw, 320px); aspect-ratio: 1 / 1; object-fit: cover; flex-shrink: 0;
@@ -89,6 +88,15 @@ ul, ol, dl { margin: 0; padding: 0; list-style: none; }
   font-weight: 800;
   letter-spacing: -0.035em;
   line-height: 0.98;
+}
+.eyebrow {
+  margin-bottom: 16px;
+  color: var(--accent-ink);
+  font-family: var(--display);
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 .lede {
   max-width: 34ch;

@@ -3,8 +3,8 @@ const GH = "https://github.com/Rah00m";
 
 const SITE = {
   name: "Rahma Fathy",
-  title: "Biomedical AI: Research and Applications",
-  lede: "I build AI for healthcare, from research ideas to apps people can actually use.",
+  title: "Systems and Biomedical Engineering Student ",
+  lede: "I investigate reliable AI for healthcare, connecting biomedical engineering, computer vision, and clinically grounded research.",
   photo: "photo.jpg",
   school: "Systems & Biomedical Engineering, Cairo University",
   location: "Cairo, Egypt",
@@ -12,10 +12,10 @@ const SITE = {
   linkedin: "https://linkedin.com/in/rahmafathy105",
   github: GH,
 about: [
-    "Salam, I'm Rahma, a senior Systems & Biomedical Engineering student at Cairo University (class of 2027), and I love using AI to make sense of medical data—images, signals, and physics-based models of the body—while exploring Computer Vision applications across diverse fields.",
-    "I like working on both sides of a project: the research (new ideas, careful experiments) and the application (building something people can actually open and use). My graduation project, Read with Me, is supervised by Dr. Aliaa Rehan Youssef, combining computer vision and cognitive AI to support learning disorders.",
-    "Outside of class I teach ML/AI at NetPoint, contribute to open source, and keep learning through courses and internships.",
-    "I'm aiming for a Master's degree in AI, so if you're working on something interesting in medical AI or computer vision, I'd love to chat."
+    "I am a senior Systems and Biomedical Engineering student at Cairo University (class of 2027), focused on medical AI, computer vision, and trustworthy machine learning for healthcare.",
+    "My work combines research and implementation: I study medical images, physiological signals, and physics-based models while building practical tools that can support clinical and educational workflows. My graduation project, Read with Me, is supervised by Dr. Aliaa Rehan Youssef and combines computer vision with cognitive AI to support learners with reading disorders.",
+    "Alongside my academic work, I teach ML/AI at NetPoint, contribute to open source, and develop my research practice through specialized courses and internships.",
+    "I am preparing for graduate study in AI and welcome conversations about medical imaging, responsible AI, and research collaboration."
   ],
   interests: ["Computer vision" ,"Medical Imaging", "Physics-Informed ML", "Cognitive AI", "Clinical AI Tools"],
   facts: [
@@ -160,7 +160,3 @@ const AWARDS = [
 //   ["Signals & systems", "FFT/STFT, ECG processing, STM32 embedded development, Blender"],
 //   ["Tools & frameworks", "Git, GitHub, React.js, Node.js, Spring Boot"]
 // ];
-
-const POSTS = [
-
-];

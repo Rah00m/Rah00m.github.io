@@ -1,7 +1,8 @@
 (function () {
   const app = document.getElementById("app");
+  const POSTS = Array.isArray(window.BLOG_POSTS) ? window.BLOG_POSTS : [];
+  const POST_CONTENT = window.BLOG_POST_CONTENT || {};
   let view = null; // "home" | "post"
-  let stopTrace = null;
 
   const esc = (s) =>
     String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -43,9 +44,9 @@
 
     return `
     <section class="hero" id="top">
-      <canvas id="trace" aria-hidden="true"></canvas>
       <div class="wrap hero-inner">
         <div class="hero-text">
+          <p class="eyebrow">${esc(s.title)}</p>
           <h1 id="hero-title">${esc(s.name)}</h1>
           <p class="lede" id="hero-lede">${esc(s.lede)}</p>
           <p class="where">${esc(s.school)}<br>${esc(s.location)}</p>
@@ -128,7 +129,7 @@
         </div>
       </div>
     </section>
-    // ${blog}
+    ${blog}
 
     <section class="section" id="contact">
       <div class="wrap split">
@@ -187,12 +188,17 @@
       return `<article class="wrap post"><a class="back" href="#blog">Back to the blog</a>
         <h1>Post not found</h1><p class="prose">This post doesn't exist. Go back to the blog to see all posts.</p></article>`;
     }
+    const body = POST_CONTENT[p.slug];
+    if (!body) {
+      return `<article class="wrap post"><a class="back" href="#blog">Back to the blog</a>
+        <h1>${esc(p.title)}</h1><p class="prose">This post content is unavailable right now. Please try again later.</p></article>`;
+    }
     document.title = p.title + " | Rahma Fathy";
     return `<article class="wrap post">
       <a class="back" href="#blog">Back to the blog</a>
       <time datetime="${esc(p.date)}">${fmtDate(p.date)}</time>
       <h1>${esc(p.title)}</h1>
-      <div class="post-body">${p.body}</div>
+      <div class="post-body">${body}</div>
     </article>`;
   }
 
@@ -201,8 +207,6 @@
     const hash = location.hash;
     const m = hash.match(/^#\/post\/(.+)$/);
 
-    if (stopTrace) { stopTrace(); stopTrace = null; }
-
     if (m) {
       view = "post";
       app.innerHTML = postHTML(decodeURIComponent(m[1]));
@@ -210,150 +214,18 @@
       return;
     }
 
-    document.title = "Rahma Fathy | Biomedical Engineering & AI Research";
+    document.title = "Rahma Fathy | Biomedical AI Research";
     if (view !== "home") {
       view = "home";
       app.innerHTML = homeHTML();
       bindFilters();
     }
-    stopTrace = initTrace();
     const id = hash.slice(1);
     const target = id && document.getElementById(id);
     if (target) target.scrollIntoView();
     else window.scrollTo(0, 0);
   }
 
-  const navBlog = document.getElementById("nav-blog");
-  if (navBlog && POSTS.length) navBlog.hidden = false;
-
   window.addEventListener("hashchange", route);
   route();
-
-  function initTrace() {
-    const hero = document.querySelector(".hero");
-    const canvas = document.getElementById("trace");
-    if (!hero || !canvas) return null;
-
-    const ctx = canvas.getContext("2d");
-    const css = getComputedStyle(document.documentElement);
-    const color = css.getPropertyValue("--accent").trim() || "#7c3aed";
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const LINK = 150;
-    const MOUSE_LINK = 190;
-    let w = 0, h = 0, nodes = [], raf = 0, running = false;
-    const mouse = { x: 0, y: 0, on: false };
-
-    function resize() {
-      const dpr = window.devicePixelRatio || 1;
-      const r = hero.getBoundingClientRect();
-      w = r.width; h = r.height;
-      canvas.width = w * dpr;
-      canvas.height = h * dpr;
-      canvas.style.width = w + "px";
-      canvas.style.height = h + "px";
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const count = Math.min(90, Math.max(28, Math.round((w * h) / 11000)));
-      nodes = Array.from({ length: count }, () => ({
-        x: Math.random() * w,
-        y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.35,
-        vy: (Math.random() - 0.5) * 0.35,
-        r: 1.8 + Math.random() * 2.4,
-        fire: 0,
-        cool: 0
-      }));
-      if (reduce) frame();
-    }
-
-    function frame() {
-      ctx.clearRect(0, 0, w, h);
-      ctx.fillStyle = color;
-      ctx.strokeStyle = color;
-
-      for (const n of nodes) {
-        if (!reduce) {
-          n.x += n.vx; n.y += n.vy;
-          if (n.x < 0 || n.x > w) n.vx *= -1;
-          if (n.y < 0 || n.y > h) n.vy *= -1;
-          if (mouse.on) {
-            const dx = mouse.x - n.x, dy = mouse.y - n.y, d = Math.hypot(dx, dy);
-            if (d < MOUSE_LINK && d > 1) { n.x += (dx / d) * 0.25; n.y += (dy / d) * 0.25; }
-          }
-          n.fire = Math.max(0, n.fire - 0.018);
-          n.cool = Math.max(0, n.cool - 1);
-          if (n.cool === 0 && Math.random() < 0.0007) { n.fire = 1; n.cool = 120; }
-        }
-      }
-
-      for (let i = 0; i < nodes.length; i++) {
-        const a = nodes[i];
-        for (let j = i + 1; j < nodes.length; j++) {
-          const b = nodes[j];
-          const d = Math.hypot(a.x - b.x, a.y - b.y);
-          if (d > LINK) continue;
-          const glow = Math.max(a.fire, b.fire);
-          if (!reduce) {
-            if (a.fire > 0.9 && b.cool === 0 && Math.random() < 0.05) { b.fire = 1; b.cool = 120; }
-            if (b.fire > 0.9 && a.cool === 0 && Math.random() < 0.05) { a.fire = 1; a.cool = 120; }
-          }
-          ctx.globalAlpha = (1 - d / LINK) * (0.28 + glow * 0.6);
-          ctx.lineWidth = 1 + glow * 1.2;
-          ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
-        }
-        if (mouse.on) {
-          const d = Math.hypot(a.x - mouse.x, a.y - mouse.y);
-          if (d < MOUSE_LINK) {
-            if (!reduce && Math.random() < 0.02 && a.cool === 0) { a.fire = 1; a.cool = 120; }
-            ctx.globalAlpha = (1 - d / MOUSE_LINK) * 0.6;
-            ctx.lineWidth = 1.2;
-            ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(mouse.x, mouse.y); ctx.stroke();
-          }
-        }
-      }
-
-      for (const n of nodes) {
-        if (n.fire > 0) {
-          ctx.globalAlpha = n.fire * 0.25;
-          ctx.beginPath(); ctx.arc(n.x, n.y, n.r + 4 + n.fire * 12, 0, Math.PI * 2); ctx.fill();
-        }
-        ctx.globalAlpha = 0.45 + n.fire * 0.55;
-        ctx.beginPath(); ctx.arc(n.x, n.y, n.r + n.fire * 1.5, 0, Math.PI * 2); ctx.fill();
-      }
-      if (mouse.on) {
-        ctx.globalAlpha = 0.9;
-        ctx.beginPath(); ctx.arc(mouse.x, mouse.y, 4, 0, Math.PI * 2); ctx.fill();
-      }
-      ctx.globalAlpha = 1;
-      if (running && !reduce) raf = requestAnimationFrame(frame);
-    }
-
-    function onMove(e) {
-      const r = canvas.getBoundingClientRect();
-      mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top; mouse.on = true;
-    }
-    function onLeave() { mouse.on = false; }
-
-    resize();
-    window.addEventListener("resize", resize);
-    hero.addEventListener("pointermove", onMove);
-    hero.addEventListener("pointerleave", onLeave);
-
-    let io = null;
-    if (!reduce) {
-      io = new IntersectionObserver(([en]) => {
-        if (en.isIntersecting && !running) { running = true; raf = requestAnimationFrame(frame); }
-        else if (!en.isIntersecting) { running = false; cancelAnimationFrame(raf); }
-      });
-      io.observe(hero);
-    }
-
-    return function stop() {
-      running = false;
-      cancelAnimationFrame(raf);
-      if (io) io.disconnect();
-      hero.removeEventListener("pointermove", onMove);
-      hero.removeEventListener("pointerleave", onLeave);
-      window.removeEventListener("resize", resize);
-    };
-  }
 })();
